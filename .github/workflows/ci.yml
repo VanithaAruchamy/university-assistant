@@ -22,15 +22,15 @@ jobs:
           cache: "npm"
 
       - name: Install backend dependencies
-        working-directory: backend
+        working-directory: 4hr-backend/backend
         run: npm install
 
       - name: Run ESLint
-        working-directory: backend
+        working-directory: 4hr-backend/backend
         run: npm run lint || true
 
       - name: Run automated tests
-        working-directory: backend
+        working-directory: 4hr-backend/backend
         env:
           JWT_SECRET: test_jwt_secret_for_ci_pipeline
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -39,7 +39,7 @@ jobs:
         run: npm test -- --testPathPattern="tests/" --coverageReporters=text
 
       - name: Build check
-        working-directory: backend
+        working-directory: 4hr-backend/backend
         run: npm run build
 
   frontend-build:
@@ -57,11 +57,11 @@ jobs:
           cache: "npm"
 
       - name: Install frontend dependencies
-        working-directory: frontend
+        working-directory: 4hr-frontend/frontend
         run: npm install
 
       - name: Build React app
-        working-directory: frontend
+        working-directory: 4hr-frontend/frontend
         env:
           REACT_APP_API_URL: http://localhost:5000
           CI: false
@@ -76,5 +76,5 @@ jobs:
         with:
           node-version: "20"
       - name: Audit backend dependencies
-        working-directory: backend
+        working-directory: 4hr-backend/backend
         run: npm audit --audit-level=high || true
