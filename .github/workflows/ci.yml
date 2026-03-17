@@ -10,26 +10,22 @@ jobs:
   backend-test:
     name: Backend Tests & Lint
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
 
       - name: Install backend dependencies
-        working-directory: 4hr-backend/backend
         run: npm install
+        working-directory: 4hr-backend/backend
 
       - name: Run ESLint
-        working-directory: 4hr-backend/backend
         run: npm run lint || true
+        working-directory: 4hr-backend/backend
 
-      - name: Run automated tests
+      - name: Run tests
         working-directory: 4hr-backend/backend
         env:
           JWT_SECRET: test_jwt_secret_for_ci_pipeline
@@ -39,26 +35,22 @@ jobs:
         run: npm test -- --testPathPattern="tests/" --coverageReporters=text
 
       - name: Build check
-        working-directory: 4hr-backend/backend
         run: npm run build
+        working-directory: 4hr-backend/backend
 
   frontend-build:
     name: Frontend Build
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
 
       - name: Install frontend dependencies
-        working-directory: 4hr-frontend/frontend
         run: npm install
+        working-directory: 4hr-frontend/frontend
 
       - name: Build React app
         working-directory: 4hr-frontend/frontend
@@ -72,9 +64,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: Audit backend dependencies
+
+      - name: Install dependencies
+        run: npm install
         working-directory: 4hr-backend/backend
+
+      - name: Audit backend
         run: npm audit --audit-level=high || true
+        working-directory: 4hr-backend/backend
