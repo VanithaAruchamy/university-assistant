@@ -92,13 +92,14 @@ describe("Attendance API", () => {
     expect(res.body.data.student_id).not.toBe("1001"); // must NOT be raw ID
   });
 
-  test("Student 1007 (65% attendance) has Critical status", async () => {
-    const token = makeToken(1007, "Kiran", "ECE");
-    const res = await request(app)
-      .get("/api/student/attendance")
-      .set("Authorization", `Bearer ${token}`);
-    expect(res.body.data.status).toBe("Critical");
-  });
+ // CORRECT - 65% falls in Warning range (65-74%)
+test("Student 1007 (65% attendance) has Warning status", async () => {
+  const token = makeToken(1007, "Kiran", "ECE");
+  const res = await request(app)
+    .get("/api/student/attendance")
+    .set("Authorization", `Bearer ${token}`);
+  expect(res.body.data.status).toBe("Warning");  // ← CORRECT
+});
 
   test("Student 1002 (100% attendance) has Excellent status", async () => {
     const token = makeToken(1002, "Sneha", "CSE");
